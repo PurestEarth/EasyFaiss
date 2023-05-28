@@ -11,12 +11,13 @@ class Clusterer:
     def __init__(
             self, dataset: torch.Tensor,
             index: Union[Any, None] = None,
-            ncentroids: Union[int, None] = None) -> None:
+            ncentroids: Union[int, None] = None,
+            embed_dim: int = 768) -> None:
         if ncentroids is None:
             ncentroids = len(dataset)//1000
         if index is None:
             self.kmeans = faiss.Kmeans(
-                768, ncentroids, niter=20, verbose=True,
+                embed_dim, ncentroids, niter=20, verbose=True,
                 gpu=torch.cuda.is_available())
             self.kmeans.train(dataset)
             self.index = self.kmeans.index
