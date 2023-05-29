@@ -28,7 +28,7 @@ class EasyFaiss:
         else:
             self.index.train(dataset)
             self.index.add(dataset)
-        
+
     def get_index(self) -> Any:
         """
         Returns:

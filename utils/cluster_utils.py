@@ -2,8 +2,8 @@
 """
 from collections import Counter
 from typing import List, Dict, Any
-import torch
 import random
+import torch
 from sklearn.manifold._t_sne import TSNE
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -89,3 +89,34 @@ def tsne_visualization(clusters: List[Any],
 
         plt.show()
     return model
+
+
+def get_cluster_names(clusters: List[Any], sentences: List[str],
+                      n_words: int = 2) -> Dict[str, List[Any]]:
+    """Given list of clusters and corresponding sentences a
+    name is assigned to each cluster. Name is picked from
+    most frequent words (n_words)
+    Args:
+        clusters (List[Any]): Clusters
+        sentences (List[str]): Sentences
+        n_words (int, optional): How many words should be picked as name. 
+        Defaults to 5.
+
+    Returns:
+        Dict[Any, str]: cluster to name
+    """
+    assert len(clusters) == len(sentences) 
+    cluster_to_name, cluster_to_list = {}, {}
+    for cluster, sentence in zip(clusters, sentences):
+        if cluster in cluster_to_list:
+            cluster_to_list[cluster].extend(sentence.lower().split())
+        else:
+            cluster_to_list[cluster] = sentence.lower().split()
+    used_words = []
+    for cluster, array in cluster_to_list.items():
+        filtered_array = [x for x in array if x not in used_words]
+        top_words = list(map(lambda x: x[0], Counter(
+            filtered_array).most_common(n_words)))
+        cluster_to_name[cluster] = '_'.join(top_words)
+        used_words.extend(top_words)
+    return cluster_to_name

@@ -1,6 +1,8 @@
 """Tests for utils
 """
-from utils.cluster_utils import get_top_count, most_common_for_cluster
+from utils.cluster_utils import get_top_count,\
+    most_common_for_cluster, get_cluster_names
+from utils.string_utils import soft_set, remove_emoji, remove_chars
 
 
 def test_get_top_count():
@@ -29,3 +31,42 @@ def test_most_common_for_cluster():
     most_common = most_common_for_cluster(clusters, sentences, 1)
     assert most_common[1] == ['lambda']
     assert most_common[2] == ['Fish']
+
+
+def test_soft_set():
+    """Tests
+    """
+    inputs = [1, 1, 2, 1, 2]
+    assert soft_set(inputs) == [1, 2]
+    inputs = [1, 1, 2, 1, 2, 6, 5, 5, 6, 4]
+    assert soft_set(inputs) == [1, 2, 6, 5, 4]
+    inputs = ['a', 'c', 'c', 'b', 'c']
+    assert soft_set(inputs) == ['a', 'c', 'b']
+
+
+def test_remove_emoji():
+    """Tests
+    """
+    assert remove_emoji("Test✍🌷📌👈🏻🖥") == "Test"
+    assert remove_emoji("🤔 Test 🙈 Test 😌") == " Test  Test "
+
+
+def test_remove_chars():
+    """Tests
+    """
+    assert remove_chars("T<><??e=s()t") == "Test"
+    assert remove_chars("T<><??e&s()t", [
+        '?', '<', '>', '&']) == "Tes()t"
+
+
+def test_get_cluster_names():
+    """Tests
+    """
+    clusters = [1, 2, 3, 1, 2, 3]
+    sentences = ['Kitchen salmon', 'Two thirds of a row',
+                 'Python java swift', 'Salmon with kitchen',
+                 "Two scripts written in Java", "Python test"]
+    cluster_names = get_cluster_names(clusters, sentences)
+    assert cluster_names[1] == 'kitchen_salmon'
+    assert cluster_names[2] == 'two_thirds'
+    assert cluster_names[3] == 'python_java'

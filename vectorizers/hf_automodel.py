@@ -1,6 +1,6 @@
 """Hugging Face Models used as means to vectorize string inputs
 """
-from typing import Union, List, Any
+from typing import Union, List
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
@@ -12,8 +12,10 @@ class HFAutoModel:
     """Class providing vectorizing functionality of HF model
     """
     def __init__(self,
-                 tokenizer: Union[str, AutoTokenizer] = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
-                 model: Union[str, AutoModel] = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
+                 tokenizer: Union[str, AutoTokenizer] =
+                 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
+                 model: Union[str, AutoModel] =
+                 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
                  embed_dim: int = 768) -> None:
         if isinstance(tokenizer, str):
             self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
@@ -44,7 +46,7 @@ class HFAutoModel:
         return torch.sum(
             token_embeddings * input_mask_expanded, 1) / torch.clamp(
             input_mask_expanded.sum(1), min=1e-9)
-            
+
     def process(self, data: List[str], batch_size: int = 64,
                 drop_remainder: bool = True, additional_features: Union[
                     torch.Tensor, None] = None):
@@ -53,7 +55,7 @@ class HFAutoModel:
         Args:
             data (List[str]): data to vectorize
             batch_size (int, optional): Batch Size. Defaults to 64.
-            drop_remainder (bool, optional): If last batch has different size 
+            drop_remainder (bool, optional): If last batch has different size
             than batch size it will be dropped if set to true.
             Defaults to True.
 
@@ -79,11 +81,11 @@ class HFAutoModel:
                 model_output, encoded_input['attention_mask'])
             # Append additional features
             if additional_features:
-                # TODO proper embed thing
                 additional_batch = additional_features[i*batch_size: (
                     i * batch_size) + batch_size]
                 sentence_embeddings = torch.cat(
-                    (torch.tensor(sentence_embeddings), additional_batch), dim=1)
+                    (torch.tensor(sentence_embeddings), additional_batch),
+                    dim=1)
             # Normalize embeddings
             sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
 
