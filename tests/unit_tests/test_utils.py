@@ -2,7 +2,8 @@
 """
 from utils.cluster_utils import get_top_count,\
     most_common_for_cluster, get_cluster_names
-from utils.string_utils import soft_set, remove_emoji, remove_chars
+from utils.string_utils import soft_set, remove_emoji, remove_chars,\
+    get_word_trigrams, get_word_bigrams
 
 
 def test_get_top_count():
@@ -70,3 +71,29 @@ def test_get_cluster_names():
     assert cluster_names[1] == 'kitchen_salmon'
     assert cluster_names[2] == 'two_thirds'
     assert cluster_names[3] == 'python_java'
+
+
+def test_n_grams():
+    """Tests ngrams
+    """
+    sentence = "Kitchen salmon throws two thirds in a row"
+    assert get_word_bigrams(sentence) == [('Kitchen', 'salmon'),
+                                          ('salmon', 'throws'),
+                                          ('throws', 'two'),
+                                          ('two', 'thirds'),
+                                          ('thirds', 'in'),
+                                          ('in', 'a'),
+                                          ('a', 'row')]
+    assert get_word_trigrams(sentence) == [('Kitchen', 'salmon', 'throws'),
+                                           ('salmon', 'throws', 'two'),
+                                           ('throws', 'two', 'thirds'),
+                                           ('two', 'thirds', 'in'),
+                                           ('thirds', 'in', 'a'),
+                                           ('in', 'a', 'row')]
+
+    sentence = "Two"
+    assert get_word_bigrams(sentence) == []
+    assert get_word_trigrams(sentence) == []
+    sentence = "Two thirds"
+    assert get_word_bigrams(sentence) == [('Two', 'thirds')]
+    assert get_word_trigrams(sentence) == []

@@ -1,6 +1,6 @@
 """Contains various string processing utils
 """
-from typing import List, Any, Union
+from typing import List, Any, Union, Tuple
 import re
 
 
@@ -64,3 +64,32 @@ def remove_chars(text: str, charr_arr: Union[List[str], None] = None):
                      '•', '”', '=', ',',
                      '&', '<', '>', '-']
     return re.sub(f"[{'|'.join(charr_arr)}]", r'', text)
+
+
+def get_word_trigrams(sentence: str) -> List[Tuple[str, str, str]]:
+    """Divides a sentence into word trigrams.
+
+    Args:
+        sentence (str): Input sentence.
+
+    Returns:
+        List[Tuple[str, str, str]]: List of word trigrams.
+    """
+    words = sentence.split()
+    trigrams = [(words[i], words[i+1], words[i+2]) for i in range(
+        len(words) - 2)]
+    return trigrams
+
+
+def get_word_bigrams(sentence: str) -> List[Tuple[str, str]]:
+    """Divides a sentence into word bigrams.
+
+    Args:
+        sentence (str): Input sentence.
+
+    Returns:
+        List[Tuple[str, str]]: List of word bigrams.
+    """
+    words = sentence.split()
+    bigrams = [(words[i], words[i+1]) for i in range(len(words) - 1)]
+    return bigrams
