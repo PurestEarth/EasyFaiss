@@ -40,3 +40,16 @@ def test_classify():
     # 2 inputs trigger threshold as exact matches
     assert classifier.classify(dataset[-5:], 5) == [1477, -1, -1, 1530, -1]
     assert classifier.classify(dataset[-5:], 5, 0) == [-1, -1, -1, -1, -1]
+
+
+def test_test():
+    """Test test function
+    """
+    dataset = torch.load('tests/data/test_tensor.pt')
+    easy = EasyFaiss(dataset, 768, factory_string="Flat")
+    classes = ['test'] * easy.index.ntotal
+    classifier = Classifier(easy.index, classes)
+    assert classifier.test(dataset[-5:], [
+        'test', 'test', 'test', 'test', 'test']) == 1.0
+    assert classifier.test(dataset[-5:], [
+        'test', 'test', 'test', 'wrong', 'wrong']) == 0.6
