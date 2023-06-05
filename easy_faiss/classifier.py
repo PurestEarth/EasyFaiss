@@ -87,17 +87,22 @@ class Classifier:
     def classification_metrics(self,
                                test_ds: torch.Tensor,
                                true_labels: List,
-                               k: int = 5) -> str:
+                               k: int = 5,
+                               output_dict: bool = False) -> str:
         """Returns classification metrics for given test dataset
 
         Args:
             test_ds (torch.Tensor): Test DS
             true_labels (List): labels of given test ds
+            k: (int): Number of nearest neighbours
+            output_dict: (bool): If True, return output as dict
 
         Returns:
             str: classification metrics
         """
-        return classification_report(true_labels, self.classify(test_ds, k=5))
+        return classification_report(
+            true_labels, self.classify(test_ds, k),
+            output_dict=output_dict)
 
     def prune(self, dataset: torch.Tensor,
               threshold=0.2, k=5,

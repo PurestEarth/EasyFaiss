@@ -9,6 +9,33 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
 
+def get_element_to_id(arr):
+    """Returns string to id dictionary
+
+    Args:
+        arr (_type_): 
+
+    Returns:
+        Dict:
+    """
+    return {string: index for index, string in enumerate(set(arr))}
+
+
+def get_element_to_id_soft(arr):
+    """Returns string to id dictionary while
+    the order won't change between iterations,
+    lower the count, higher the index
+
+    Args:
+        arr (_type_): 
+
+    Returns:
+        Dict:
+    """
+    return {string: index for index, (string, _) in enumerate(Counter(arr).most_common())}
+
+
+
 def get_top_count(lst: List[str], cutoff: int) -> List[str]:
     """returns top count of given array
 
