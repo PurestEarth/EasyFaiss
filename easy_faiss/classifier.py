@@ -2,9 +2,9 @@
 """
 from typing import List
 from collections import Counter
-from easy_faiss.easy_faiss import EasyFaiss
 import torch
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, mean_squared_error
+from easy_faiss.easy_faiss import EasyFaiss
 
 
 class Classifier:
@@ -84,6 +84,19 @@ class Classifier:
         accuracy = correct_count / total_count
         return accuracy
 
+    def get_mean_squared_error(self, test_ds, true_labels, k: int = 5):
+        """Returns mean squared error
+
+        Args:
+            test_ds (torch.Tensor): Test DS
+            true_labels (List): labels of given test ds
+            k: (int): Number of nearest neighbours
+
+        Returns:
+            _type_: mean squared error
+        """
+        return mean_squared_error(true_labels, self.classify(test_ds, k))
+    
     def classification_metrics(self,
                                test_ds: torch.Tensor,
                                true_labels: List,
@@ -117,8 +130,10 @@ class Classifier:
                 trained on
             threshold (float, optional): Similarity threshold. Defaults to 0.2.
             k (int, optional): Num of nearest neighbours. Defaults to 5.
-            return_indexes (bool, optional): If indexes to remove should be returned. Defaults to False.
-            factory_string (_type_, optional): If indexes arent returned Classifier will prune redundant data. Defaults to None.
+            return_indexes (bool, optional): If indexes to remove should 
+            be returned. Defaults to False.
+            factory_string (_type_, optional): If indexes arent returned 
+            Classifier will prune redundant data. Defaults to None.
 
         Returns:
             _type_: _description_

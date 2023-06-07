@@ -32,8 +32,8 @@ def get_element_to_id_soft(arr):
     Returns:
         Dict:
     """
-    return {string: index for index, (string, _) in enumerate(Counter(arr).most_common())}
-
+    return {string: index for index, (string, _) in enumerate(
+        Counter(arr).most_common())}
 
 
 def get_top_count(lst: List[str], cutoff: int) -> List[str]:
